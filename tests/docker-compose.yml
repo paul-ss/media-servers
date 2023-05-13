@@ -1,10 +1,20 @@
-version: "3.9"
+version: "3"
 services:
   app:
     build: .
-    stdin_open: true # docker run -i
-    tty: true        # docker run -t
+    # devices:
+    #   - "/dev/ttyUSB0:/dev/ttyUSB0"
+    # stdin_open: true # docker run -i
+    # tty: true        # docker run -t
     volumes:
       - ../salt:/home/salt
       - ../configs:/home/configs
-    command: /bin/bash
+      -  /sys/fs/cgroup:/sys/fs/cgroup:ro
+    tmpfs:
+      - /run
+      - /run/lock
+    ports:
+      - "8000:22"
+    cap_add:
+      - SYS_ADMIN
+    command: /sbin/init

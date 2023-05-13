@@ -119,5 +119,13 @@ Subsystem	sftp	/usr/lib/openssh/sftp-server
 #Match User anoncvs
 #	X11Forwarding no
 #	AllowTcpForwarding no
-#	PermitTTY no
+#	PermitTTY no      
 #	ForceCommand cvs server
+
+{% for user in salt['pillar.get']('data:storage_users') %}
+Match User {{ user.name }}
+  ChrootDirectory {{ '/storage/' + user.name }}
+  X11Forwarding no
+  AllowTcpForwarding no
+  ForceCommand internal-sftp
+{% endfor %}
